@@ -4,7 +4,7 @@
 @plugin 'tailwindcss-animate';
 
 @source '../views';
-@source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';
+/* @source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php'; */
 
 @custom-variant dark (&:is(.dark *));
 
@@ -166,35 +166,41 @@
     /* h4,h5,h6{
         @apply text-md font-semibold;
     } */
-  
-  .tiptap-mathematics-render {
-    border-radius: 0.25rem;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
 
-    &[data-type='inline-math'] {
-      display: inline-block;
+    .tiptap-mathematics-render {
+        border-radius: 0.25rem;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+
+        &[data-type='inline-math'] {
+            display: inline-block;
+        }
+
+        &[data-type='block-math'] {
+            display: block;
+            margin: 1rem 0;
+            padding: 1rem;
+            text-align: center;
+        }
+
+        &.inline-math-error,
+        &.block-math-error {
+            background: var(--red-light);
+            color: var(--red);
+            border: 1px solid var(--red-dark);
+            padding: 0.5rem;
+            border-radius: 0.25rem;
+        }
+        &:hover {
+            background-color: var(--muted);
+        }
     }
 
-    &[data-type='block-math'] {
-      display: block;
-      margin: 1rem 0;
-      padding: 1rem;
-      text-align: center;
+    .tiptap p.is-editor-empty:first-child::before {
+        color: #adb5bd;
+        content: attr(data-placeholder);
+        float: left;
+        height: 0;
+        pointer-events: none;
     }
-
-    &.inline-math-error,
-    &.block-math-error {
-      background: var(--red-light);
-      color: var(--red);
-      border: 1px solid var(--red-dark);
-      padding: 0.5rem;
-      border-radius: 0.25rem;
-    }
-    &:hover {
-      background-color: var(--muted);
-    }
-  }
-    
-
 }
