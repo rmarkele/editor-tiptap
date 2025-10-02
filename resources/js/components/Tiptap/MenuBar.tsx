@@ -1,7 +1,9 @@
-import { AlignCenter, AlignJustify, AlignLeft, AlignRight, Bold, Heading1, Heading2, Heading3, Heading4, Highlighter, Italic, List, ListOrdered, Strikethrough, Underline,  } from "lucide-react";
+import { AlignCenter, AlignJustify, AlignLeft, AlignRight, Bold, Heading1, Heading2, Heading3, Heading4, Highlighter, Italic, List, ListOrdered, Sigma, SquareFunction, Strikethrough, Underline, } from "lucide-react";
 import { Toggle } from "../ui/toggle";
 import type { Editor } from '@tiptap/core';
 import { useEditorState } from "@tiptap/react";
+import { useCallback } from "react";
+
 
 
 export default function MenuBar({ editor }: { editor: Editor | null }) {
@@ -41,6 +43,63 @@ export default function MenuBar({ editor }: { editor: Editor | null }) {
             }
         },
     });
+
+    // const toggleEditing = useCallback(
+    //     (e: ToggleEditingEvent) => {
+    //         if (!editor) {
+    //             return
+    //         }
+
+    //         const { checked } = e.target
+
+    //         editor.setEditable(!checked, true)
+    //         editor.view.dispatch(editor.view.state.tr.scrollIntoView())
+    //     },
+    //     [editor],
+    // )
+
+    const onInsertInlineMath = useCallback(() => {
+        if (!editor) return;
+        
+        const hasSelection = !editor.state.selection.empty
+
+        if (hasSelection) {
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            return (editor.chain() as any).setInlineMath().focus().run()
+        }
+
+        const latex = prompt('Enter inline math expression:', '') ?? '';
+        if (latex) {
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            return (editor.chain() as any).insertInlineMath({ latex }).focus().run()
+        }
+    }, [editor])
+
+    const onInsertBlockMath = useCallback(() => {
+        if (!editor) return;
+        
+        const hasSelection = !editor.state.selection.empty
+
+        if (hasSelection) {
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            return (editor.chain() as any).setBlockMath().focus().run()
+        }
+
+        const latex = prompt('Enter block math expression:', '') ?? '';
+        if (latex) {
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            return (editor.chain() as any).insertBlockMath({ latex }).focus().run()
+        }
+    }, [editor])
+
+    // const onRemoveInlineMath = useCallback(() => {
+    //     editor.chain().deleteInlineMath().focus().run()
+    // }, [editor])
+
+    // const onRemoveBlockMath = useCallback(() => {
+    //     editor?.chain().deleteBlockMath().focus().run()
+    // }, [editor])
+
 
     if (!editor) {
         return null;
@@ -163,13 +222,31 @@ export default function MenuBar({ editor }: { editor: Editor | null }) {
             },
         ],
         //Group 5
-         [
+        [
             {
                 icon: <Highlighter />,
                 label: 'Highlight',
                 action: () => editor.chain().focus().toggleHighlight().run(),
                 disabled: false,
                 isActive: editorState?.isHighlight,
+            },
+        ],
+
+        //Group6
+        [
+            {
+                icon: <SquareFunction />,
+                label: 'insert Inline Math',
+                action: () => onInsertInlineMath(),
+                disabled: false,
+                isActive: false,
+            },
+            {
+                icon: <Sigma />,
+                label: 'insert Blcok Math',
+                action: () => onInsertBlockMath(),
+                disabled: false,
+                isActive: false,
             },
         ]
 
@@ -179,26 +256,27 @@ export default function MenuBar({ editor }: { editor: Editor | null }) {
     return (
         <div className="control-group">
             <div className=" flex mx-5 mt-1 focus:outline-none border  border-2 border-gray-300 px-4 py-1 bg-slate-200">
-                
+
                 {buttons.map((group, index) => (
                     <div key={index} className="flex border-r last:border-r-0 border-slate-400 px-1 space-x-1 z-50">
                         {group.map((button, btnIndex) => (
                             <>
-                            <Toggle
-                                size='lg'
-                                title={button.label}
-                                aria-label={button.label}
-                                key={btnIndex}
-                                pressed={button.isActive}
-                                onPressedChange={button.action}
-                                className="data-[state=on]:bg-slate-300 data-[state=on]:text-slate-900"
-                            >
-                                {button.icon}
-                            </Toggle>
-                            {/* <ListOrdered size={32}/> */}
+                                <Toggle
+                                    size='lg'
+                                    title={button.label}
+                                    aria-label={button.label}
+                                    key={btnIndex}
+                                    pressed={button.isActive}
+                                    onPressedChange={button.action}
+                                    className="data-[state=on]:bg-slate-300 data-[state=on]:text-slate-900"
+                                >
+                                    {button.icon}
+                                </Toggle>
+                                {/* <ListOrdered size={32}/> */}
                             </>
 
                         ))}
+                        
                     </div>
                 ))}
 

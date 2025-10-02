@@ -1,4 +1,5 @@
 @import 'tailwindcss';
+@import 'katex/dist/katex.min.css';
 
 @plugin 'tailwindcss-animate';
 
@@ -162,9 +163,38 @@
         @apply text-lg font-bold;
     }
 
-    h4,h5,h6{
+    /* h4,h5,h6{
         @apply text-md font-semibold;
+    } */
+  
+  .tiptap-mathematics-render {
+    border-radius: 0.25rem;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+
+    &[data-type='inline-math'] {
+      display: inline-block;
     }
+
+    &[data-type='block-math'] {
+      display: block;
+      margin: 1rem 0;
+      padding: 1rem;
+      text-align: center;
+    }
+
+    &.inline-math-error,
+    &.block-math-error {
+      background: var(--red-light);
+      color: var(--red);
+      border: 1px solid var(--red-dark);
+      padding: 0.5rem;
+      border-radius: 0.25rem;
+    }
+    &:hover {
+      background-color: var(--muted);
+    }
+  }
     
 
 }
