@@ -16,6 +16,7 @@ import {
     ListOrdered,
     Sigma,
     SquareFunction,
+    SquareSigma,
     Strikethrough,
     Underline,
 } from 'lucide-react';
@@ -324,7 +325,7 @@ export default function MenuBar({ editor }: { editor: Editor | null }) {
         //Group6
         [
             {
-                icon: <SquareFunction />,
+                icon: <SquareSigma />,
                 label: 'insert Inline Math',
                 action: () => onInsertInlineMath(),
                 disabled: !editorState?.isEditable,
